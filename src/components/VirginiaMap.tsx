@@ -26,9 +26,10 @@ export const VirginiaMap = (props: VirginiaMapProps) => {
         .translate([width * (scale / width + 2.9), height * (scale / height - 2.4)]);
     const pathGenerator = d3.geoPath().projection(projection);
 
-    const vaMapData = require('@/data/maps/VirginiaCounty.json')
+    const vaMapData = require('@/data/maps/VA_Zip_Codes.json')
     vaMapData.features.forEach((feature: GeoJSON.Feature) => {
-      feature.geometry = turf.rewind(feature.geometry, {reverse: true}) as Geometry;
+      if (feature.geometry !== null && feature.geometry !== undefined)
+        feature.geometry = turf.rewind(feature.geometry, {reverse: true}) as Geometry;
     })
     // const padding = 10
     // const projection = d3.geoMercator().fitSize([width, height], vaMapData)
@@ -51,7 +52,7 @@ export const VirginiaMap = (props: VirginiaMapProps) => {
         .attr("stroke-width", 0.5)
         .attr("fill", (d, i) => colors[i % 2])
         .on('click', function (event, d: any) {
-          console.log(d.properties.NAME);
+          console.log(d.properties.ZIP_CODE);
         });
 
     return () => {
