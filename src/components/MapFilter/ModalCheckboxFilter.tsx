@@ -1,5 +1,5 @@
 'use client'
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import {Checkbox, Modal, Sheet, Typography} from '@mui/joy';
 
 type CityAndZip = {
@@ -15,6 +15,17 @@ interface ModalCheckboxFilterProps {
 export const ModalCheckboxFilter = (props: ModalCheckboxFilterProps) => {
   const {selections, isOpen, onClose} = props;
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
+
+  useEffect(() => {
+    const initialCheckedItems: { [key: string]: boolean } = {};
+    Object.entries(selections).forEach(([city, zips]) => {
+      initialCheckedItems[city] = true;  // Mark city as checked
+      zips.forEach(zip => {
+        initialCheckedItems[`${city}-${zip}`] = true;  // Mark each zip as checked
+      });
+    });
+    setCheckedItems(initialCheckedItems);
+  }, [selections]);
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {name, checked} = event.target;
@@ -44,7 +55,8 @@ export const ModalCheckboxFilter = (props: ModalCheckboxFilterProps) => {
             {Object.entries(selections).map(([city, zips]) => (
                 <div key={city}>
                   <Checkbox
-                      checked={checkedItems[city] ?? false}
+                      checked={selections[city].every(zip => checkedItems[`${city}-${zip}`])}
+                      indeterminate={selections[city].some(zip => checkedItems[`${city}-${zip}`]) && !selections[city].every(zip => checkedItems[`${city}-${zip}`])}
                       onChange={handleCheckboxChange}
                       name={city}
                   />
