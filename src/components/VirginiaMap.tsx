@@ -18,6 +18,11 @@ export const VirginiaMap = (props: VirginiaMapProps) => {
   const {height, width, scale, data} = props
   const virginiaMapContainer = useRef<HTMLDivElement>(null)
 
+  const zoomed = (event: any) => {
+    const {transform} = event
+    d3.select(virginiaMapContainer.current).select('svg').attr('transform', transform)
+  }
+
   useEffect(() => {
     if (!virginiaMapContainer.current) return;
 
@@ -39,6 +44,10 @@ export const VirginiaMap = (props: VirginiaMapProps) => {
     const svg = d3.select(virginiaMapContainer.current).append('svg')
         .attr('width', width)
         .attr('height', height)
+
+    const zoom = d3.zoom().on('zoom', zoomed)
+    // @ts-ignore
+    svg.call(zoom)
 
     const colors = ["#E57373", "#81D4FA"];
 
