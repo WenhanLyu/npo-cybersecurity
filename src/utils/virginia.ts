@@ -1,6 +1,6 @@
 import VAZipCodes from '@/data/maps/VA_Zip_Codes.json';
 
-type CityAndZip = {
+export type CityAndZip = {
   [key: string]: string[];
 };
 

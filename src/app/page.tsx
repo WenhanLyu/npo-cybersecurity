@@ -1,14 +1,23 @@
-import Image from "next/image";
-import {VirginiaMap} from "@/components/VirginiaMap";
-import {ModalMapSearch} from "@/components/MapFilter/ModalMapSearch";
+import {VirginiaMap} from '@/components/VirginiaMap';
+import {VirginiaMapCityAndZipCodeFilterButton} from '@/components/MapFilter/VirginiaMapCityAndZipCodeFilterButton';
+import {VirginiaMapContainer} from '@/components/VirginiaMapContainer';
+import {HealthcareNteeFilterButton} from '@/components/MapFilter/HealthcareNteeFilterButton';
+import {DataAndVirginiaMapContainer} from '@/components/DataAndVirginiaMapContainer';
 
 export default function Home() {
   return (
-      <>
-        <main className="flex min-h-screen flex-col items-center justify-between p-24">
-          <VirginiaMap width={960} height={600} scale={6000} data={[1, 2, 3]}/>
+      <div className={'flex flex-col min-h-screen'}>
+        <header className={'p-6 bg-blue-500 text-white w-full'}>
+          <h1 className={'text-lg font-bold'}>Virginia Map Dashboard</h1>
+        </header>
+
+        <main className={'flex-grow flex flex-col items-center p-4'}>
+          <DataAndVirginiaMapContainer/>
         </main>
-        <ModalMapSearch/>
-      </>
+
+        <footer className={'p-6 bg-gray-800 text-white w-full text-center'}>
+          <p>© 2023 Virginia Map Data. All rights reserved.</p>
+        </footer>
+      </div>
   );
 }

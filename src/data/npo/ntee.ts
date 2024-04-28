@@ -1,4 +1,4 @@
-interface NTEECodeData {
+export interface NTEECodeData {
   [key: string]: string;
 }
 

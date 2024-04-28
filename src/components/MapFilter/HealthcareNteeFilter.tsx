@@ -11,19 +11,17 @@ interface NTEECodeData {
 }
 
 interface HealthcareNteeFilterProps {
-  NTEECategories: NTEECodeData;
-  NTEECode: NTEECodeData;
-  isOpen: boolean;
-  onClose: () => void;
+  NTEECategories: NTEECodeData,
+  NTEECode: NTEECodeData,
+  isOpen: boolean,
+  onClose: () => void,
+  nteeCheckedItems: { [key: string]: boolean },
+  onCheckedItemsChange: (newItems: { [key: string]: boolean }) => void,
 }
 
-export const HealthcareNteeFilter = ({
-                                       NTEECategories,
-                                       NTEECode,
-                                       isOpen,
-                                       onClose
-                                     }: HealthcareNteeFilterProps) => {
-  const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
+export const HealthcareNteeFilter = (props: HealthcareNteeFilterProps) => {
+  const {NTEECategories, NTEECode, isOpen, onClose, nteeCheckedItems, onCheckedItemsChange} = props;
+  const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(nteeCheckedItems);
   const [tempCheckedItems, setCheckedItemsTemp] = useState<{ [key: string]: boolean }>({});
   const [searchText, setSearchText] = useState('');
   const [filteredCategories, setFilteredCategories] = useState<{ [key: string]: string[] }>({});
@@ -38,6 +36,7 @@ export const HealthcareNteeFilter = ({
     });
     setCheckedItems(checkedStates);
     setCheckedItemsTemp(checkedStates);
+    onCheckedItemsChange(checkedStates);
   }, [NTEECategories, NTEECode]);
 
   useEffect(() => {
@@ -67,6 +66,7 @@ export const HealthcareNteeFilter = ({
 
   const handleSubmit = () => {
     setCheckedItems(tempCheckedItems);
+    onCheckedItemsChange(tempCheckedItems);
     onClose();
   };
 

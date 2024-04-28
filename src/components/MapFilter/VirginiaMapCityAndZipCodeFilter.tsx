@@ -14,10 +14,12 @@ interface VirginiaMapCityAndZipCodeFilterProps {
   selections: CityAndZip,
   isOpen: boolean,
   onClose: () => void,
+  cityAndZipCheckItems: { [key: string]: boolean },
+  onCheckedItemsChange: (newItems: { [key: string]: boolean }) => void,
 }
 
 export const VirginiaMapCityAndZipCodeFilter = (props: VirginiaMapCityAndZipCodeFilterProps) => {
-  const {selections, isOpen, onClose} = props;
+  const {selections, isOpen, onClose, cityAndZipCheckItems, onCheckedItemsChange} = props;
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
   const [tempCheckedItems, setTempCheckedItems] = useState<{ [key: string]: boolean }>({});
   const [searchText, setSearchText] = useState('');
@@ -33,6 +35,7 @@ export const VirginiaMapCityAndZipCodeFilter = (props: VirginiaMapCityAndZipCode
     });
     setCheckedItems(initialCheckedItems);
     setTempCheckedItems(initialCheckedItems);
+    onCheckedItemsChange(initialCheckedItems);
   }, [selections]);
 
   useEffect(() => {
@@ -82,6 +85,7 @@ export const VirginiaMapCityAndZipCodeFilter = (props: VirginiaMapCityAndZipCode
 
   const handleSubmit = () => {
     setCheckedItems(tempCheckedItems);
+    onCheckedItemsChange(tempCheckedItems);
     onClose();
   };
 
