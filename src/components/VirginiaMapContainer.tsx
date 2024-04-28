@@ -1,8 +1,9 @@
 import React from 'react';
 import {VirginiaMap} from '@/components/VirginiaMap';
+import {NPOData} from '@/data/npo/process';
 
 interface VirginiaMapContainerProps {
-  data: number[]; // Assuming data is just an array of numbers for simplification
+  data: { [key: string]: NPOData[] };
 }
 
 export const VirginiaMapContainer = (props: VirginiaMapContainerProps) => {

@@ -17,6 +17,7 @@ export const DataAndVirginiaMapContainer = (props: DataAndVirginiaMapContainerPr
   const [cityZipFilteredData, setCityZipFilteredData] = useState<NPOData[]>([]);
   const [nteeCodeFilteredData, setNteeCodeFilteredData] = useState<NPOData[]>([]);
   const [combinedFilteredData, setCombinedFilteredData] = useState<NPOData[]>([]);
+  const [combinedDataByZip, setCombinedDataByZip] = useState<{ [key: string]: NPOData[] }>({});
 
   const handleCityZipChange = (newItems: { [key: string]: boolean }) => {
     setCityZipCheckItems(newItems);
@@ -49,8 +50,20 @@ export const DataAndVirginiaMapContainer = (props: DataAndVirginiaMapContainerPr
     );
 
     setCombinedFilteredData(combinedData);
-    console.log(combinedData);
   }, [cityZipFilteredData, nteeCodeFilteredData]);
+
+  useEffect(() => {
+    const zipMap: { [key: string]: NPOData[] } = {};
+
+    combinedFilteredData.forEach(npoData => {
+      if (!zipMap[npoData.zip5]) {
+        zipMap[npoData.zip5] = [];
+      }
+      zipMap[npoData.zip5].push(npoData);
+    });
+
+    setCombinedDataByZip(zipMap);
+  }, [combinedFilteredData]);
 
   return (
       <div className={'w-1280px m-auto'}>
@@ -69,7 +82,7 @@ export const DataAndVirginiaMapContainer = (props: DataAndVirginiaMapContainerPr
         </div>
         <div className={'flex justify-center'}>
           <VirginiaMapContainer
-              data={[1, 2, 3]}
+              data={combinedDataByZip}
           />
         </div>
       </div>
