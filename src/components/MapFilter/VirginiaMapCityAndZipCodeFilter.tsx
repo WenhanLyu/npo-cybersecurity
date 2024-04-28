@@ -1,5 +1,5 @@
-'use client'
-import React, {useEffect, useState, useCallback} from "react";
+'use client';
+import React, {useEffect, useState, useCallback} from 'react';
 import {Button, Checkbox, IconButton, Input, Modal, Sheet, Typography} from '@mui/joy';
 import {Grid, InputAdornment} from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
@@ -10,13 +10,13 @@ type CityAndZip = {
   [key: string]: string[]
 }
 
-interface ModalCheckboxFilterProps {
+interface VirginiaMapCityAndZipCodeFilterProps {
   selections: CityAndZip,
   isOpen: boolean,
   onClose: () => void,
 }
 
-export const ModalCheckboxFilter = (props: ModalCheckboxFilterProps) => {
+export const VirginiaMapCityAndZipCodeFilter = (props: VirginiaMapCityAndZipCodeFilterProps) => {
   const {selections, isOpen, onClose} = props;
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>({});
   const [tempCheckedItems, setTempCheckedItems] = useState<{ [key: string]: boolean }>({});
@@ -105,7 +105,7 @@ export const ModalCheckboxFilter = (props: ModalCheckboxFilterProps) => {
   return (
       <Modal open={isOpen} onClose={handleCancel}
              sx={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-        <Sheet variant="outlined" sx={{
+        <Sheet variant={'outlined'} sx={{
           width: 720,
           p: 3,
           height: '60vh',
@@ -115,9 +115,9 @@ export const ModalCheckboxFilter = (props: ModalCheckboxFilterProps) => {
           borderRadius: '12px'
         }}>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-            <Typography level="h4" component="h3" sx={{flex: '1 1 auto', fontWeight: 'bold'}}>VA Cities and Zip
+            <Typography level={'h4'} component={'h3'} sx={{flex: '1 1 auto', fontWeight: 'bold'}}>VA Cities and Zip
               Codes</Typography>
-            <Button variant="plain"
+            <Button variant={'plain'}
                     onClick={handleCancel}
                     size={'sm'}
             >
@@ -125,16 +125,16 @@ export const ModalCheckboxFilter = (props: ModalCheckboxFilterProps) => {
             </Button>
           </div>
           <Input
-              placeholder="Search by city or zip"
+              placeholder={'Search by city or zip'}
               onChange={handleSearchChange}
               value={searchText}
               endDecorator={
-                <InputAdornment position="end">
+                <InputAdornment position={'end'}>
                   {searchText && (
                       <IconButton
-                          size="sm"
+                          size={'sm'}
                           onClick={clearSearch}
-                          aria-label="clear"
+                          aria-label={'clear'}
                       >
                         <CancelIcon/>
                       </IconButton>
@@ -176,15 +176,15 @@ export const ModalCheckboxFilter = (props: ModalCheckboxFilterProps) => {
             ))}
           </div>
           <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 0'}}>
-            <Button variant="plain" onClick={handleToggleAll} style={{marginRight: '8px'}}>
+            <Button variant={'plain'} onClick={handleToggleAll} style={{marginRight: '8px'}}>
               {Object.values(tempCheckedItems).every(Boolean) ? 'Uncheck All' : 'Check All'}
             </Button>
             <div>
               <Button variant={'outlined'} onClick={handleCancel} style={{marginRight: '12px'}}>Cancel</Button>
-              <Button variant="solid" color="primary" onClick={handleSubmit}>Submit</Button>
+              <Button variant={'solid'} color={'primary'} onClick={handleSubmit}>Submit</Button>
             </div>
           </div>
         </Sheet>
       </Modal>
   );
-}
+};
