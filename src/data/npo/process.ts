@@ -1,7 +1,7 @@
-import {promises as fs} from 'fs';
+import {useState, useEffect} from 'react';
 import {parse} from 'csv-parse/sync';
 
-type NPOData = {
+export type NPOData = {
   ein: string;
   name: string;
   inCareOfName: string;
@@ -14,11 +14,10 @@ type NPOData = {
   nteeCodeFull: string;
 };
 
-async function readAndProcessCSV(filePath: string): Promise<NPOData[]> {
-  const fileContent = await fs.readFile(filePath, 'utf-8');
+const readAndProcessCSV = (fileContent: string): NPOData[] => {
   const records: any[] = parse(fileContent, {
     columns: true,
-    skip_empty_lines: true
+    skip_empty_lines: true,
   });
 
   return records.map((record) => ({
@@ -31,20 +30,28 @@ async function readAndProcessCSV(filePath: string): Promise<NPOData[]> {
     zip5: record.ZIP.split('-')[0],
     zipFull: record.ZIP,
     nteeCodeBase: record.NTEE_CD.substring(0, 3),
-    nteeCodeFull: record.NTEE_CD
+    nteeCodeFull: record.NTEE_CD,
   }));
-}
+};
 
-const filePath = 'npodata_va.csv';
+export const useFetchNPOData = () => {
+  const [data, setData] = useState<NPOData[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<Error | null>(null);
 
-// Define a constant which is a promise of the processed data
-const processedDataPromise: Promise<NPOData[]> = readAndProcessCSV(filePath);
+  useEffect(() => {
+    fetch('npodata_va.csv')
+        .then((response) => response.text())
+        .then((text) => {
+          const processedData = readAndProcessCSV(text);
+          setData(processedData);
+          setLoading(false);
+        })
+        .catch((e) => {
+          setError(e);
+          setLoading(false);
+        });
+  }, []);
 
-processedDataPromise.then((data) => {
-  console.log('CSV data has been processed if you need to check on its completion here.');
-  // Further actions can be performed here with the 'data'
-}).catch((error) => {
-  console.error('Error in processed data promise:', error);
-});
-
-export const processedNPOData = processedDataPromise;
+  return {data, loading, error};
+};
