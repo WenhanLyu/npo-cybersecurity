@@ -22,7 +22,7 @@ interface HealthcareNteeFilterProps {
 export const HealthcareNteeFilter = (props: HealthcareNteeFilterProps) => {
   const {NTEECategories, NTEECode, isOpen, onClose, nteeCheckedItems, onCheckedItemsChange} = props;
   const [checkedItems, setCheckedItems] = useState<{ [key: string]: boolean }>(nteeCheckedItems);
-  const [tempCheckedItems, setCheckedItemsTemp] = useState<{ [key: string]: boolean }>({});
+  const [tempCheckedItems, setTempCheckedItems] = useState<{ [key: string]: boolean }>({});
   const [searchText, setSearchText] = useState('');
   const [filteredCategories, setFilteredCategories] = useState<{ [key: string]: string[] }>({});
 
@@ -35,7 +35,7 @@ export const HealthcareNteeFilter = (props: HealthcareNteeFilterProps) => {
       });
     });
     setCheckedItems(checkedStates);
-    setCheckedItemsTemp(checkedStates);
+    setTempCheckedItems(checkedStates);
     onCheckedItemsChange(checkedStates);
   }, [NTEECategories, NTEECode]);
 
@@ -61,8 +61,32 @@ export const HealthcareNteeFilter = (props: HealthcareNteeFilterProps) => {
 
   const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const {name, checked} = event.target;
-    setCheckedItemsTemp(prev => ({...prev, [name]: checked}));
+    const isCategory = !name.includes('-');
+
+    if (isCategory) {
+      const codes = filteredCategories[name];
+      const updatedItems = codes.reduce((acc, code) => ({
+        ...acc,
+        [`${name}-${code}`]: checked
+      }), {});
+
+      setTempCheckedItems(prev => ({
+        ...prev,
+        [name]: checked,
+        ...updatedItems
+      }));
+    } else {
+      setTempCheckedItems(prev => ({...prev, [name]: checked}));
+      const category = name.split('-')[0];
+      const allChecked = filteredCategories[category].every(code => tempCheckedItems[`${category}-${code}`] || code === name.split('-')[1] && checked);
+
+      setTempCheckedItems(prev => ({
+        ...prev,
+        [category]: allChecked
+      }));
+    }
   };
+
 
   const handleSubmit = () => {
     setCheckedItems(tempCheckedItems);
@@ -71,7 +95,7 @@ export const HealthcareNteeFilter = (props: HealthcareNteeFilterProps) => {
   };
 
   const handleCancel = () => {
-    setCheckedItemsTemp(checkedItems);
+    setTempCheckedItems(checkedItems);
     onClose();
   };
 
@@ -81,7 +105,7 @@ export const HealthcareNteeFilter = (props: HealthcareNteeFilterProps) => {
       result[key] = !allChecked;
       return result;
     }, {} as { [key: string]: boolean });
-    setCheckedItemsTemp(newCheckedStates);
+    setTempCheckedItems(newCheckedStates);
   }, [tempCheckedItems]);
 
   return (
