@@ -1,5 +1,7 @@
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import Table from '@mui/joy/Table';
+import Select from '@mui/joy/Select';
+import Option from '@mui/joy/Option';
 import {NPOData} from '@/data/npo/process';
 
 interface DataDisplayTableProps {
@@ -8,6 +10,8 @@ interface DataDisplayTableProps {
 }
 
 const DataDisplayTable = ({combinedFilteredData, showZero}: DataDisplayTableProps) => {
+  const [assetFilter, setAssetFilter] = useState<string>('');
+  const [incomeFilter, setIncomeFilter] = useState<string>('');
 
   const codeLabels = [
     '0', '1 to 10k', '10k to 25k', '25k to 100k',
@@ -15,13 +19,53 @@ const DataDisplayTable = ({combinedFilteredData, showZero}: DataDisplayTableProp
     '5M to 10M', '10M to 50M', '50M+'
   ];
 
+  const handleAssetFilterChange = (event: React.SyntheticEvent | null,
+                                   newValue: string | null,) => {
+    setAssetFilter(newValue || '');
+  };
+
+  const handleIncomeFilterChange = (event: React.SyntheticEvent | null,
+                                    newValue: string | null,) => {
+    setIncomeFilter(newValue || '');
+  };
+
+  useEffect(() => {
+    setAssetFilter('');
+    setIncomeFilter('');
+  }, [combinedFilteredData]);
+
   return (
-      <div className={'overflow-auto max-w-[960px] max-h-[480px]'}>
+      <div className={'flex flex-col overflow-auto max-w-[960px] max-h-[480px]'}>
+        <div className={'flex justify-end space-x-4 p-4'}>
+          <Select
+              placeholder={'Filter by Asset Size'}
+              value={assetFilter}
+              onChange={handleAssetFilterChange}
+              size={'sm'}
+          >
+            <Option value={''}>None</Option>
+            {codeLabels.map((label, index) => (
+                <Option key={index} value={label}>
+                  {label}
+                </Option>
+            ))}
+          </Select>
+          <Select
+              placeholder={'Filter by Income Range'}
+              value={incomeFilter}
+              onChange={handleIncomeFilterChange}
+              size={'sm'}
+          >
+            <Option value={''}>None</Option>
+            {codeLabels.map((label, index) => (
+                <Option key={index} value={label}>
+                  {label}
+                </Option>
+            ))}
+          </Select>
+        </div>
         <div style={{overflowX: 'auto', overflowY: 'auto'}}>
-          <Table sx={{
-            width: 'auto',
-            minWidth: '960px',
-          }}>
+          <Table sx={{width: 'auto', minWidth: '960px'}}>
             <thead>
             <tr>
               <th>EIN</th>
@@ -34,16 +78,16 @@ const DataDisplayTable = ({combinedFilteredData, showZero}: DataDisplayTableProp
               <th>NTEE Base</th>
               <th>NTEE Full</th>
               <th>Asset Size</th>
-              {/* Renamed from Asset Code */}
               <th>Income Range</th>
-              {/* Renamed from Income Code */}
             </tr>
             </thead>
             <tbody>
             {combinedFilteredData
-                .filter((data) => showZero || (data.assetCode !== '0' && data.incomeCode !== '0'))
-                .map((data) => (
-                    <tr key={data.ein}>
+                .filter(data => (showZero || (data.assetCode !== '0' && data.incomeCode !== '0')) &&
+                    (!assetFilter || codeLabels[parseInt(data.assetCode)] === assetFilter) &&
+                    (!incomeFilter || codeLabels[parseInt(data.incomeCode)] === incomeFilter))
+                .map((data, index) => (
+                    <tr key={`${data.ein.padStart(9, '0')}-${index}`}>
                       <td>{data.ein.padStart(9, '0')}</td>
                       <td>{data.name}</td>
                       <td>{data.inCareOfName}</td>
@@ -54,9 +98,7 @@ const DataDisplayTable = ({combinedFilteredData, showZero}: DataDisplayTableProp
                       <td>{data.nteeCodeBase}</td>
                       <td>{data.nteeCodeFull}</td>
                       <td>{codeLabels[parseInt(data.assetCode)]}</td>
-                      {/* Map assetCode to text label */}
                       <td>{codeLabels[parseInt(data.incomeCode)]}</td>
-                      {/* Map incomeCode to text label */}
                     </tr>
                 ))}
             </tbody>

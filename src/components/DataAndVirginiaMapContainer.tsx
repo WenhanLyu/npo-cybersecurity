@@ -8,6 +8,7 @@ import {NTEECategories, NTEECode} from '@/data/npo/ntee';
 import {NPOData, useFetchNPOData} from '@/data/npo/process';
 import {BarChart} from '@/components/BarChart';
 import Switch from '@mui/joy/Switch';
+import DataDisplayTable from '@/components/DataDisplayTable';
 
 interface DataAndVirginiaMapContainerProps {
 }
@@ -21,6 +22,7 @@ export const DataAndVirginiaMapContainer = (props: DataAndVirginiaMapContainerPr
   const [combinedFilteredData, setCombinedFilteredData] = useState<NPOData[]>([]);
   const [combinedDataByZip, setCombinedDataByZip] = useState<{ [key: string]: NPOData[] }>({});
   const [showZero, setShowZero] = useState(true);
+  const [tableData, setTableData] = useState<NPOData[]>([]);
 
   const handleCityZipChange = (newItems: { [key: string]: boolean }) => {
     setCityZipCheckItems(newItems);
@@ -66,6 +68,10 @@ export const DataAndVirginiaMapContainer = (props: DataAndVirginiaMapContainerPr
     });
 
     setCombinedDataByZip(zipMap);
+  }, [combinedFilteredData]);
+
+  useEffect(() => {
+    setTableData(combinedFilteredData);
   }, [combinedFilteredData]);
 
   return (
@@ -120,6 +126,7 @@ export const DataAndVirginiaMapContainer = (props: DataAndVirginiaMapContainerPr
                 showZeroColumn={showZero}
             />
           </div>
+          <DataDisplayTable combinedFilteredData={tableData} showZero={showZero}/>
         </div>
       </div>
   );
