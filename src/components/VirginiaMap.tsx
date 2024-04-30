@@ -44,8 +44,10 @@ export const VirginiaMap = (props: VirginiaMapProps) => {
       const {transform} = event;
       g.attr('transform', transform);
     });
+    // @ts-ignore
     g.call(zoom);
 
+    // @ts-ignore
     svg.call(zoom);
 
     const maxEntries = d3.max(Object.values(data), arr => arr.length) || 0;
@@ -54,15 +56,15 @@ export const VirginiaMap = (props: VirginiaMapProps) => {
     g.selectAll('path')
         .data(vaMapData.features)
         .enter().append('path')
+        // @ts-ignore
         .attr('d', pathGenerator)
         .attr('stroke', '#000')
         .attr('stroke-width', 0.5)
-        .attr('fill', d => {
+        .attr('fill', (d: any) => {
           const zipData = data[d.properties.ZIP_CODE];
           return zipData ? colorScale(zipData.length) : '#ccc';
         })
-        .on('click', (event, d) => {
-          console.log(data[d.properties.ZIP_CODE]); // You can still keep this line if you want to log data.
+        .on('click', (event, d: any) => {
 
           // Remove any existing tooltips before creating a new one
           d3.selectAll('.tooltip').remove();

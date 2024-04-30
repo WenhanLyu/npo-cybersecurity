@@ -77,10 +77,10 @@ export const BarChart = ({data, codeType, title, showZeroColumn}: BarChartProps)
         .attr('width', x.bandwidth())
         .attr('height', d => height - y(d))
         .attr('fill', 'steelblue');
-
+    
     g.selectAll('.bar')
         .append('title')
-        .text(d => d.toString());
+        .text((d: any) => d.toString());
 
     g.selectAll('.bar-label')
         .data(filteredCounts)
