@@ -16,7 +16,7 @@ export default function Home() {
         </main>
 
         <footer className={'p-6 bg-gray-800 text-white w-full text-center'}>
-          <p>© 2023 Virginia Map Data. All rights reserved.</p>
+          <p>By Wenhan Lyu and Yimeng Wang @ 2024.</p>
         </footer>
       </div>
   );
