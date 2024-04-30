@@ -43,7 +43,7 @@ const DataDisplayTable = ({combinedFilteredData, showZero}: DataDisplayTableProp
               onChange={handleAssetFilterChange}
               size={'sm'}
           >
-            <Option value={''}>None</Option>
+            <Option value={''}>Filter by Asset Size</Option>
             {codeLabels.map((label, index) => (
                 <Option key={index} value={label}>
                   {label}
@@ -56,7 +56,7 @@ const DataDisplayTable = ({combinedFilteredData, showZero}: DataDisplayTableProp
               onChange={handleIncomeFilterChange}
               size={'sm'}
           >
-            <Option value={''}>None</Option>
+            <Option value={''}>Filter by Income Range</Option>
             {codeLabels.map((label, index) => (
                 <Option key={index} value={label}>
                   {label}
