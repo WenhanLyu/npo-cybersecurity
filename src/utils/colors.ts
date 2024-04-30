@@ -9,4 +9,5 @@ export const colors = {
   cinnabar: '#DB3D3D',
   pictonBlue: '#60ABD8',
   wisteria: '#E490EC',
-}
+};
+
